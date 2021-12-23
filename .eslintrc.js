@@ -3,13 +3,14 @@ module.exports = {
     commonjs: true,
     es2021: true,
     node: true,
-  },
-  extends: ['standard'],
-  parserOptions: {
+},
+extends: ['standard'],
+extends: ['standard', 'plugin:json/recommended', 'prettier'],
+parserOptions: {
     ecmaVersion: 12,
-  },
-  rules: {
-    'comma-dangle': 'off',
-    'space-before-function-paren': 'off',
-  },
-}
+},
+rules: {
+    // 'comma-dangle': 'off',
+    // 'space-before-function-paren': 'off',
+},
+};
