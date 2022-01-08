@@ -14,7 +14,7 @@ const contactSchema = Schema({
   favorite: {
     type: Boolean,
     default: false,
-  },
+  }
 });
 
 const Contact = model("contact", contactSchema);
