@@ -1,6 +1,5 @@
-const authenicate = require("./authenticate");
+const authenticate = require("./authenticate");
 
 module.exports = {
-    authenicate,
-    
+    authenticate
 }

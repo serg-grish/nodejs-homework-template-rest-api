@@ -10,7 +10,7 @@ const {joiRegisterSchema, joiLoginSchema} = require("../../model/user");
 
 const {SECRET_KEY} = process.env;
 
-router.post("/register", async(req, res, next) => {
+router.post("/signup", async(req, res, next) => {
     try {
         const {error} = joiRegisterSchema.validate(req.body);
         if(error){
