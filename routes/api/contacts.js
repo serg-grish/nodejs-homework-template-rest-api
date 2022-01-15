@@ -1,20 +1,24 @@
 const express = require('express');
 const router = express.Router();
 
+const {authenticate} = require("../../middlewares");
 const {Contact} = require("../../model");
 const {JoiSchema} = require("../../model/contact");
 
 
-router.get('/', async (req, res, next) => {
+router.get('/', authenticate, async (req, res, next) => {
   try {
-    const contacts = await Contact.find();
+    const {page = 1, limit = 10} = req.query;
+    const {_id} = req.user;
+    const skip = (page - 1) * limit;
+    const contacts = await Contact.find({owner: _id}, "-createdAt -updatedAt", {skip, limit: +limit});
     res.json(contacts);
   } catch (error) {
     next(error);
   }
 });
 
-router.get('/:contactId', async (req, res, next) => {
+router.get('/:contactId', authenticate, async (req, res, next) => {
   const { contactId } = req.params;
   try {
     const contacts = await Contact.findById(contactId);
@@ -30,14 +34,15 @@ router.get('/:contactId', async (req, res, next) => {
   }
 });
 
-router.post('/', async (req, res, next) => {
+router.post("/", authenticate, async(req, res, next)=> {
+  // console.log(req.user);
   try {
-    const { error } = JoiSchema.validate(req.body);
+    const {error} = JoiSchema.validate(req.body);
     if (error) {
       return res.status(400).json({ message: 'missing required name field' });
     }
-
-    const contacts = await Contact.create(req.body);
+    const {_id} = req.user;
+    const contacts = await Contact.create({...req.body, owner: _id});
     res.status(201).json({ contacts });
   } catch (error) {
     if (error.message.includes('validation failed')) {
