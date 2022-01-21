@@ -3,6 +3,7 @@ const {BadRequest, Conflict, Unauthorized} = require("http-errors");
 const bcrypt = require("bcryptjs");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
+const gravatar = require("gravatar");
 
 // eslint-disable-next-line no-unused-vars
 const {User} = require("../../model");
@@ -23,7 +24,8 @@ router.post("/signup", async(req, res, next) => {
         }
         const salt = await bcrypt.genSalt(10);
         const hashPassword = await bcrypt.hash(password, salt);
-        const newUser = await User.create({name, email, password: hashPassword});
+        const avatarURL = gravatar.url(email);
+        const newUser = await User.create({name, email, password: hashPassword, avatarURL});
         res.status(201).json({
             user: {
                 name: newUser.name,
